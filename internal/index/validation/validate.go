@@ -101,20 +101,23 @@ func ValidatePlugin(name string, p index.Plugin) error {
 
 // validatePlatform checks Platform for structural validity.
 func validatePlatform(p index.Platform) error {
-	if p.URI == "" && p.Sha256 == "" {
+	if p.URI == "" {
 		return errors.New("`uri` has to be set")
+	}
+	if p.Sha256 == "" {
+		return errors.New("`sha256` sum has to be set")
 	}
 	if !isValidSHA256(p.Sha256) {
 		return errors.Errorf("`sha256` value %s is not valid, must match pattern %s", p.Sha256, sha256Pattern)
-	}
-	if err := validateSelector(p.Selector); err != nil {
-		return errors.Wrap(err, "invalid platform selector")
 	}
 	if p.Bin == "" {
 		return errors.New("`bin` has to be set")
 	}
 	if err := validateFiles(p.Files); err != nil {
 		return errors.Wrap(err, "`files` is invalid")
+	}
+	if err := validateSelector(p.Selector); err != nil {
+		return errors.Wrap(err, "invalid platform selector")
 	}
 	return nil
 }
