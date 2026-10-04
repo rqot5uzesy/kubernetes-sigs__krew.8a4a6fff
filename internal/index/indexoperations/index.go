@@ -48,12 +48,12 @@ func ListIndexes(paths environment.Paths) ([]Index, error) {
 		indexName := e.Name()
 		remote, err := gitutil.GetRemoteURL(paths.IndexPath(indexName))
 		if err != nil {
-			continue
+			return nil, errors.Wrapf(err, "failed to list the remote URL for index %s", indexName)
 		}
 
 		indexes = append(indexes, Index{
-			Name: remote,
-			URL:  indexName,
+			Name: indexName,
+			URL:  remote,
 		})
 	}
 	return indexes, nil
